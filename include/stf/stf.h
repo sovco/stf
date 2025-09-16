@@ -115,7 +115,7 @@ static inline void stf_clean_up(stf_test_suite *suite)
         stf_clean_up(&TEST_CASES);                                                                                                                                                                         \
     } while (0)
 
-#define stf_expect(expr, ...)                                                                          \
+#define STF_EXPECT(expr, ...)                                                                          \
     do {                                                                                               \
         int line = __LINE__;                                                                           \
         stf_expect_options options = (stf_expect_options){ __VA_ARGS__ };                              \

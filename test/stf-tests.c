@@ -3,54 +3,54 @@
 
 STF_TEST_CASE(expect, success)
 {
-    stf_expect(true);
+    STF_EXPECT(true);
 }
 
 STF_TEST_CASE(expect, multiple_success)
 {
-    stf_expect(true);
-    stf_expect(true);
-    stf_expect(true);
+    STF_EXPECT(true);
+    STF_EXPECT(true);
+    STF_EXPECT(true);
 }
 
 STF_TEST_CASE(expect, multiple_success_with_non_showable_failure_msg)
 {
-    stf_expect(true, .failure_msg = "oh yeaaa.");
-    stf_expect(true, .failure_msg = "oh yeaaaaaa.");
-    stf_expect(true, .failure_msg = "oh yeaaaaaaaaa.");
+    STF_EXPECT(true, .failure_msg = "oh yeaaa.");
+    STF_EXPECT(true, .failure_msg = "oh yeaaaaaa.");
+    STF_EXPECT(true, .failure_msg = "oh yeaaaaaaaaa.");
 }
 
 STF_TEST_CASE(expect, failure)
 {
-    stf_expect(false);
+    STF_EXPECT(false);
 }
 
 STF_TEST_CASE(expect, multiple_failures)
 {
-    stf_expect(false);
-    stf_expect(false);
-    stf_expect(false);
+    STF_EXPECT(false);
+    STF_EXPECT(false);
+    STF_EXPECT(false);
 }
 
 STF_TEST_CASE(expect, on_failure_return)
 {
-    stf_expect(false, .return_on_failure = true);
-    stf_expect(true);
-    stf_expect(true);
+    STF_EXPECT(false, .return_on_failure = true);
+    STF_EXPECT(true);
+    STF_EXPECT(true);
 }
 
 STF_TEST_CASE(expect, on_failure_return_with_description)
 {
-    stf_expect(false, .return_on_failure = true, .failure_msg = "oh noooo.");
-    stf_expect(true);
-    stf_expect(true);
+    STF_EXPECT(false, .return_on_failure = true, .failure_msg = "oh noooo.");
+    STF_EXPECT(true);
+    STF_EXPECT(true);
 }
 
 STF_TEST_CASE(expect, multiple_failures_all_with_descriptions)
 {
-    stf_expect(false, .failure_msg = "oh noooo.");
-    stf_expect(false, .failure_msg = "oh noooooooo.");
-    stf_expect(false, .failure_msg = "oh noooooooooo.");
+    STF_EXPECT(false, .failure_msg = "oh noooo.");
+    STF_EXPECT(false, .failure_msg = "oh noooooooo.");
+    STF_EXPECT(false, .failure_msg = "oh noooooooooo.");
 }
 
 int main()
