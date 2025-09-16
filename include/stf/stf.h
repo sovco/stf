@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define ANSI_RESET_ALL "\x1b[0m"
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_GREEN "\x1b[32m"
@@ -130,5 +134,9 @@ static inline int STF_RUN_TESTS()
             }                                                                                          \
         }                                                                                              \
     } while (0)
+
+#ifdef __cplusplus
+}// extern "C"
+#endif
 
 #endif// STF_H
