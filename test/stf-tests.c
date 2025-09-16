@@ -60,6 +60,5 @@ STF_TEST_CASE(expect, multiple_failures_all_with_descriptions)
 
 int main()
 {
-    STF_RUN_TEST();
-    return EXIT_SUCCESS;
+    return STF_RUN_TESTS();
 }

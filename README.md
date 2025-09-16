@@ -32,8 +32,7 @@ To run the tests in your main call STF_RUN_TEST():
 ```c
 int main()
 {
-    STF_RUN_TEST();
-    return EXIT_SUCCESS;
+    return STF_RUN_TESTS();
 }
 ```
 

@@ -2,6 +2,7 @@
 #define STF_H
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 #define ANSI_RESET_ALL "\x1b[0m"
@@ -86,6 +87,30 @@ static inline void stf_clean_up(stf_test_suite *suite)
     }
 }
 
+static inline int STF_RUN_TESTS()
+{
+    int ret = EXIT_SUCCESS;
+    printf(ANSI_COLOR_GREEN "Running total of %d tests...\n" ANSI_RESET_ALL, TEST_CASES.count);
+    for (stf_test_case *test_case = TEST_CASES.cases; test_case != NULL; test_case = (stf_test_case *)test_case->next) {
+        test_case->executor((void *)test_case);
+        if (test_case->expect_faults == NULL) {
+            printf(ANSI_COLOR_GREEN "    [PASSED] %s.%s\n" ANSI_RESET_ALL, test_case->group, test_case->description);
+            continue;
+        }
+        ret = EXIT_FAILURE;
+        printf(ANSI_COLOR_GREEN "    [" ANSI_COLOR_RED "FAILED" ANSI_RESET_ALL ANSI_COLOR_GREEN "] %s.%s\n" ANSI_RESET_ALL, test_case->group, test_case->description);
+        for (stf_expect_faults *failure_msg = test_case->expect_faults; failure_msg != NULL; failure_msg = (stf_expect_faults *)failure_msg->next) {
+            if (failure_msg->failure_msg) {
+                printf("        " ANSI_COLOR_RED "At line" ANSI_COLOR_GREEN " %d" ANSI_COLOR_RED ", expectations were not met: %s\n" ANSI_RESET_ALL, failure_msg->line_num, failure_msg->failure_msg);
+                continue;
+            }
+            printf("        " ANSI_COLOR_RED "At line" ANSI_COLOR_GREEN " %d" ANSI_COLOR_RED ", expectations were not met.\n" ANSI_RESET_ALL, failure_msg->line_num);
+        }
+    }
+    stf_clean_up(&TEST_CASES);
+    return ret;
+}
+
 #define STF_TEST_CASE(grp, desc)                                                                                                                                               \
     void grp##desc##_test(void *test_info);                                                                                                                                    \
     void __attribute__((constructor)) register_##grp##desc(void)                                                                                                               \
@@ -93,27 +118,6 @@ static inline void stf_clean_up(stf_test_suite *suite)
         stf_register_case(&TEST_CASES, (stf_test_case){ .executor = (test_func)&grp##desc##_test, .next = NULL, .group = #grp, .description = #desc, .expect_faults = NULL }); \
     }                                                                                                                                                                          \
     void grp##desc##_test(void *test_info)
-
-#define STF_RUN_TEST()                                                                                                                                                                                     \
-    do {                                                                                                                                                                                                   \
-        printf(ANSI_COLOR_GREEN "Running total of %d tests...\n" ANSI_RESET_ALL, TEST_CASES.count);                                                                                                        \
-        for (stf_test_case *test_case = TEST_CASES.cases; test_case != NULL; test_case = (stf_test_case *)test_case->next) {                                                                               \
-            test_case->executor((void *)test_case);                                                                                                                                                        \
-            if (test_case->expect_faults == NULL) {                                                                                                                                                        \
-                printf(ANSI_COLOR_GREEN "    [PASSED] %s.%s\n" ANSI_RESET_ALL, test_case->group, test_case->description);                                                                                  \
-                continue;                                                                                                                                                                                  \
-            }                                                                                                                                                                                              \
-            printf(ANSI_COLOR_GREEN "    [" ANSI_COLOR_RED "FAILED" ANSI_RESET_ALL ANSI_COLOR_GREEN "] %s.%s\n" ANSI_RESET_ALL, test_case->group, test_case->description);                                 \
-            for (stf_expect_faults *failure_msg = test_case->expect_faults; failure_msg != NULL; failure_msg = (stf_expect_faults *)failure_msg->next) {                                                   \
-                if (failure_msg->failure_msg) {                                                                                                                                                            \
-                    printf("        " ANSI_COLOR_RED "At line" ANSI_COLOR_GREEN " %d" ANSI_COLOR_RED ", expectations were not met: %s\n" ANSI_RESET_ALL, failure_msg->line_num, failure_msg->failure_msg); \
-                    continue;                                                                                                                                                                              \
-                }                                                                                                                                                                                          \
-                printf("        " ANSI_COLOR_RED "At line" ANSI_COLOR_GREEN " %d" ANSI_COLOR_RED ", expectations were not met.\n" ANSI_RESET_ALL, failure_msg->line_num);                                  \
-            }                                                                                                                                                                                              \
-        }                                                                                                                                                                                                  \
-        stf_clean_up(&TEST_CASES);                                                                                                                                                                         \
-    } while (0)
 
 #define STF_EXPECT(expr, ...)                                                                          \
     do {                                                                                               \
