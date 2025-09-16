@@ -119,7 +119,7 @@ static inline void stf_clean_up(stf_test_suite *suite)
     do {                                                                                               \
         int line = __LINE__;                                                                           \
         stf_expect_options options = (stf_expect_options){ __VA_ARGS__ };                              \
-        if (!expr) {                                                                                   \
+        if (!(expr)) {                                                                                 \
             stf_register_test_case_failure_msg((stf_test_case *)test_info, options.failure_msg, line); \
             if (options.return_on_failure) {                                                           \
                 return;                                                                                \

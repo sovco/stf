@@ -20,6 +20,11 @@ STF_TEST_CASE(expect, multiple_success_with_non_showable_failure_msg)
     STF_EXPECT(true, .failure_msg = "oh yeaaaaaaaaa.");
 }
 
+STF_TEST_CASE(expect, success_with_an_expression)
+{
+    STF_EXPECT(60 + 9 == 69, .failure_msg = "oh yeaaa.");
+}
+
 STF_TEST_CASE(expect, failure)
 {
     STF_EXPECT(false);
